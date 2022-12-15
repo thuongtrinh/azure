@@ -1,0 +1,33 @@
+spring:
+  main.allow-bean-definition-overriding: true
+  application.name: Store Job Service
+
+async:
+  corepoolsize: 4
+  maxpoolsize: 100
+  queuecapacity: 200
+  
+rest:
+  template:
+    timeout:
+      read: 300000
+      connect: 300000
+
+management:
+  server:
+    port: 18080 # lets use a different management port in case you need to listen to HTTP requests on 8080
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  endpoints:
+    enabled-by-default: true # disable all management endpoints except health
+    web:
+      exposure:
+        include: metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+
+application:
+  description: Store Job Service
+  version: 1.0

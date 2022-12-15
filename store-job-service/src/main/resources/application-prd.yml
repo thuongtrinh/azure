@@ -1,0 +1,23 @@
+server:
+  port: 8085
+  servlet:
+    context-path: /
+  shutdown: "graceful"
+
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-root.xml
+    url: ${MONGODB_URI}
+
+azure-storage:
+  connectionString: "DefaultEndpointsProtocol=https;AccountName=${AZURESTORAGE_USERNAME};AccountKey=${AZURESTORAGE_PASSWORD};EndpointSuffix=core.windows.net"
+  container: ${AZURE_STORAGE_CONTAINER}
+  sasToken: ${AZURE_STORAGE_SASTOKEN}
+  account: ${AZURE_STORAGE_USERNAME}
+  accountKey: ${AZURE_STORAGE_PASSWORD}
+
+transaction:
+  url:
