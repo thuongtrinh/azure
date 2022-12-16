@@ -7,5 +7,6 @@ import lombok.Data;
 public class FileAzureRequestDTO {
 
     private String fileName;
+    private String dirName;
 
 }

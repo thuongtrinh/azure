@@ -132,6 +132,40 @@ public class ImportDataController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description =  "Indicates the requested data were returned."),
             @ApiResponse(responseCode = "400", description =  "Bad request."),
             @ApiResponse(responseCode = "500", description =  "Wrong params")})
+    @Operation(description = "load info file follow link in store API")
+    @GetMapping(path = "/store-job/load-info-file-follow-link-in-azure-store", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseWithBody> loadFileFollowLinkInAzureStore(
+            @RequestParam(value = "directory" ) String directory,
+            @RequestHeader(value = "Authorization", required = false) String bearerToken) {
+
+        ResponseWithBody<List<FileDTO>> response = new ResponseWithBody<>();
+
+        try {
+            String uri = httpServletRequest.getRequestURI();
+            String exchangeId = UUID.randomUUID().toString();
+            MDC.put("traceId", exchangeId);
+            response.setExchangeId(exchangeId);
+
+            //handle
+            ResultDTO<List<FileDTO>> resultlDTOs = importFileService.getFileNameFollowLink(directory);
+            if(ObjectUtils.isNotEmpty(resultlDTOs.getStatus())) {
+                response.setResponseStatus(resultlDTOs.getStatus());
+                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            response.setResponseStatus(ErrorUtil.createResponseStatusFromErrorList(null));
+            response.setBody(resultlDTOs.getBody());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("load info file in azure store has error encountered {}", e);
+            response.setResponseStatus(ErrorUtil.createErrorResponseStatus(e.getMessage()));
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description =  "Indicates the requested data were returned."),
+            @ApiResponse(responseCode = "400", description =  "Bad request."),
+            @ApiResponse(responseCode = "500", description =  "Wrong params")})
     @Operation(description = "load original file in store API")
     @GetMapping(path = "/store-job/move-file-in-azure-store", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseWithBody> moveFileInAzureStore(
@@ -280,4 +314,36 @@ public class ImportDataController {
         }
     }
 
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description =  "Indicates the requested data were returned."),
+            @ApiResponse(responseCode = "400", description =  "Bad request."),
+            @ApiResponse(responseCode = "500", description =  "Wrong params")})
+    @Operation(description = "get data from azure store API")
+    @PostMapping(path = "/store-job/download-file-azure-store", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseWithBody> downloadDataAzureStore(
+            @RequestHeader(value = "Authorization", required = false) String bearerToken,
+            @RequestBody RequestWithBody<FileAzureRequestDTO> requestWithBody) {
+
+        ResponseWithBody<List<DataImportDTO>> response = new ResponseWithBody<>();
+
+        try {
+            String uri = httpServletRequest.getRequestURI();
+            String exchangeId = StringUtils.isBlank(requestWithBody.getExchangeId())
+                    ? UUID.randomUUID().toString() : requestWithBody.getExchangeId();
+            MDC.put("traceId", exchangeId);
+            requestWithBody.setExchangeId(exchangeId);
+            response.setExchangeId(exchangeId);
+
+            //handle
+            FileAzureRequestDTO fileAzureRequestDTO = requestWithBody.getBody();
+            importFileService.downloadDataAzureStore(fileAzureRequestDTO);
+
+            response.setResponseStatus(ErrorUtil.createResponseStatusFromErrorList(null));
+            response.setBody(null);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("get data from azure store has error encountered {}", e);
+            response.setResponseStatus(ErrorUtil.createErrorResponseStatus(e.getMessage()));
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

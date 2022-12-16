@@ -1,5 +1,6 @@
 package com.txt.store.job.service;
 
+import com.txt.store.job.dto.FileAzureRequestDTO;
 import com.txt.store.job.dto.FileDTO;
 
 import java.io.InputStream;
@@ -15,4 +16,5 @@ public interface AzureService {
 
     boolean moveFileBetweenAzureBlob(String blobNameSource, String blobNameTarget);
 
+    void downloadedFile(FileAzureRequestDTO fileAzureRequestDTO);
 }

@@ -7,9 +7,10 @@ server:
 spring:
   data:
     mongodb:
-      username: admin
+#      authentication-database: admin
+#      username: admin
+#      password: password
       database: springboot-mongo
-      password: password
       port: '27017'
       host: localhost
 #      uri: mongodb+srv://mongo_user:mongo_pass@host-demo.mongodb.net/database_sys?retryWrites=true&w=majority

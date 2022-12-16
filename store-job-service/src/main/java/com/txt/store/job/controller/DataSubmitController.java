@@ -37,12 +37,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DataSubmitController {
 
-    //region INIT
     final Environment env;
     final ObjectMapper objectMapper;
     final HttpServletRequest httpServletRequest;
     final CommonService commonService;
-    //endregion
 
 
     //region start api

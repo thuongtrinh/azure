@@ -10,7 +10,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @Data
-@ToString
 public class DataImportDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -22,4 +21,18 @@ public class DataImportDTO implements Serializable {
     private String idNo;
     private String status;
     private String errorFields;
+
+    @Override
+    public String toString() {
+        return "DataImportDTO{" +
+                "receivedDate=" + receivedDate +
+                ", expiredDate=" + expiredDate +
+                ", amount=" + amount +
+                ", keyNo='" + keyNo + '\'' +
+                ", content='" + content + '\'' +
+                ", idNo='" + idNo + '\'' +
+                ", status='" + status + '\'' +
+                ", errorFields='" + errorFields + '\'' +
+                '}';
+    }
 }

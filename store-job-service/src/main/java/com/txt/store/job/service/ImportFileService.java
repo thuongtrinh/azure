@@ -26,4 +26,8 @@ public interface ImportFileService {
     Boolean readingOriginFileAzure(FileAzureRequestDTO fileAzureRequestDTO);
 
     boolean moveFileBlobAzureLink(String fileNameSource, String fileNameTarget);
+
+    boolean downloadDataAzureStore(FileAzureRequestDTO fileAzureRequestDTO);
+
+    ResultDTO<List<FileDTO>> getFileNameFollowLink(String directory);
 }

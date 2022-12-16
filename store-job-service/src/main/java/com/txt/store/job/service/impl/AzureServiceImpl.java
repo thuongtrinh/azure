@@ -3,23 +3,26 @@ package com.txt.store.job.service.impl;
 import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.models.BlobHttpHeaders;
+import com.azure.storage.blob.specialized.BlockBlobClient;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.azure.storage.CloudStorageAccount;
 import com.microsoft.azure.storage.blob.*;
+import com.txt.store.job.dto.FileAzureRequestDTO;
 import com.txt.store.job.dto.FileDTO;
 import com.txt.store.job.service.AzureService;
 import com.txt.store.job.utils.JsonUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +36,7 @@ public class AzureServiceImpl implements AzureService {
     private String azureStorageContainer;
 
     final BlobContainerClient blobContainerClient;
+    final CloudBlobContainer cloudBlobContainerPC;
 
     @Autowired
     private JsonUtils jsonUtils;
@@ -89,11 +93,11 @@ public class AzureServiceImpl implements AzureService {
             return fileDTOs;
         }
 
-        CloudStorageAccount cloudStorageAccount = CloudStorageAccount.parse(azureStorageConnectionString);
+        /*CloudStorageAccount cloudStorageAccount = CloudStorageAccount.parse(azureStorageConnectionString);
         CloudBlobClient cloudBlobClient = cloudStorageAccount.createCloudBlobClient();
-        CloudBlobContainer cloudBlobContainer = cloudBlobClient.getContainerReference(azureStorageContainer);
+        CloudBlobContainer cloudBlobContainer = cloudBlobClient.getContainerReference(azureStorageContainer);*/
 
-        CloudBlobDirectory directory = cloudBlobContainer.getDirectoryReference(directoryPath);
+        CloudBlobDirectory directory = cloudBlobContainerPC.getDirectoryReference(directoryPath);
         Iterable<ListBlobItem> blobItems = directory.listBlobs();
 
         for (ListBlobItem fileBlob : blobItems) {
@@ -132,6 +136,25 @@ public class AzureServiceImpl implements AzureService {
         }
 
         return false;
+    }
+
+    @Override
+    public void downloadedFile(FileAzureRequestDTO fileAzureRequestDTO) {
+        // Download the blob to a local file
+        // Append the string "DOWNLOAD" before the .txt extension so that you can see both files.
+        String fileName = fileAzureRequestDTO.getFileName();
+        String downloadFileName = fileName.replace(".xlsx", "_DOWNLOAD_" + System.currentTimeMillis() + ".xlsx");
+        String localPath = ".\\";
+
+        if(StringUtils.isNotBlank(fileAzureRequestDTO.getDirName())) {
+            fileName = fileAzureRequestDTO.getDirName() + "/" + fileName;
+        }
+
+        System.out.println("\nDownloading from fileName\n\t " + fileName);
+        System.out.println("\nDownloading blob to\n\t " + localPath + downloadFileName);
+
+        BlockBlobClient blobClient = blobContainerClient.getBlobClient(fileName).getBlockBlobClient();
+        blobClient.downloadToFile(localPath + downloadFileName);
     }
 
     public byte[] getBytesFromInputStream(InputStream is) throws IOException {

@@ -108,6 +108,21 @@ public class ImportFileServiceImpl implements ImportFileService {
     }
 
     @Override
+    public ResultDTO<List<FileDTO>> getFileNameFollowLink(String directoryBlob) {
+        ResultDTO<List<FileDTO>> resultDTO = new ResultDTO<>();
+
+        try {
+            List<FileDTO> fileDTOs = azureService.getListAzureBlobFileName(directoryBlob);
+            resultDTO.setBody(fileDTOs);
+        } catch (Exception e) {
+            log.error("getFileNameImportData has been error: " + e);
+            resultDTO.setStatus(ErrorUtil.createResponseStatus(ResponseCode.KEY_E009));
+        }
+
+        return resultDTO;
+    }
+
+    @Override
     public boolean uploadFileToAzureStore(FileInfoDTO fileInfoDTO) {
         log.info("Process uploadFileToAzureStore");
 
@@ -178,6 +193,12 @@ public class ImportFileServiceImpl implements ImportFileService {
         return isMove;
     }
 
+    @Override
+    public boolean downloadDataAzureStore(FileAzureRequestDTO fileAzureRequestDTO) {
+        azureService.downloadedFile(fileAzureRequestDTO);
+        return true;
+    }
+
     public Boolean readingOriginFileAzure(FileAzureRequestDTO fileAzureRequestDTO) {
         log.info("Process readingOriginFileAzure {}", fileAzureRequestDTO.getFileName());
         boolean isSubmit = false;
@@ -190,6 +211,7 @@ public class ImportFileServiceImpl implements ImportFileService {
 
             if (fileDTO != null) {
                 List<DataImportDTO> dataImportDTOSuccess = readDataBlobFile(fileDTO);
+                System.out.println(dataImportDTOSuccess);
 
                 createFileExcelSuccess(blobName);
                 createFileExcelFail(blobName);
@@ -201,47 +223,12 @@ public class ImportFileServiceImpl implements ImportFileService {
 
                  azureService.moveFileBetweenAzureBlob(blobName, blobNameTarget);
             }
+
+            return true;
         } catch (Exception e) {
             log.error("readingOriginFileAzure has been error: " + e);
         }
         return isSubmit;
-    }
-
-    private void createFileExcelFail(String blobName) {
-        log.info("createFileExcelFail - {}", blobName);
-
-        try {
-            FileDTO fileDTO = azureService.getAzureBlobFile(blobName);
-            String originalFilename = fileDTO.getName();
-            originalFilename = originalFilename.substring(originalFilename.lastIndexOf("/") + 1);
-            String extFile = ExcelUtil.getFileExtension(originalFilename);
-            String fileName = originalFilename.replaceAll(extFile, "");
-
-            Path pathTemp = Files.createTempFile(fileName, "." + extFile);
-            File fileTemp = pathTemp.toFile();
-            FileUtils.copyInputStreamToFile(fileDTO.getInputStream(), fileTemp);
-            InputStream fileInputStream = FileUtils.openInputStream(fileTemp);
-            List<Integer> failList = new ArrayList<>();
-            failList.add(1);
-            failList.add(8);
-            InputStream respFile = excelService.excelDeleteRow(fileInputStream, failList);
-
-            FileInfoDTO fileInfoDTO = new FileInfoDTO();
-            fileInfoDTO.setFileName(originalFilename);
-            fileInfoDTO.setInputStream(respFile);
-            fileInfoDTO.setContentType(fileDTO.getContentType());
-
-            String blobNameFail = new StringBuilder(Constant.AZURE_DIR.ORIGINAL).append("/")
-                    .append(Constant.AZURE_DIR.FAIL).toString();
-            fileInfoDTO.setBlobDirectory(blobNameFail);
-
-            //upload file to FAIL directory
-            pushFileToAzureStore(fileInfoDTO);
-
-            FileUtils.delete(fileTemp);
-        } catch (Exception e) {
-            log.error("createFileExcelFail has been error: " + e);
-        }
     }
 
     private void createFileExcelSuccess(String blobName) {
@@ -259,9 +246,7 @@ public class ImportFileServiceImpl implements ImportFileService {
             FileUtils.copyInputStreamToFile(fileDTO.getInputStream(), fileTemp);
             InputStream fileInputStream = FileUtils.openInputStream(fileTemp);
             List<Integer> successList = new ArrayList<>();
-            successList.add(4);
-            successList.add(5);
-            successList.add(7);
+            successList.add(1);
             InputStream respFile = excelService.excelDeleteRow(fileInputStream, successList);
 
             FileInfoDTO fileInfoDTO = new FileInfoDTO();
@@ -279,6 +264,42 @@ public class ImportFileServiceImpl implements ImportFileService {
             FileUtils.delete(fileTemp);
         } catch (Exception e) {
             log.error("createFileExcelSuccess has been error: " + e);
+        }
+    }
+
+    private void createFileExcelFail(String blobName) {
+        log.info("createFileExcelFail - {}", blobName);
+
+        try {
+            FileDTO fileDTO = azureService.getAzureBlobFile(blobName);
+            String originalFilename = fileDTO.getName();
+            originalFilename = originalFilename.substring(originalFilename.lastIndexOf("/") + 1);
+            String extFile = ExcelUtil.getFileExtension(originalFilename);
+            String fileName = originalFilename.replaceAll(extFile, "");
+
+            Path pathTemp = Files.createTempFile(fileName, "." + extFile);
+            File fileTemp = pathTemp.toFile();
+            FileUtils.copyInputStreamToFile(fileDTO.getInputStream(), fileTemp);
+            InputStream fileInputStream = FileUtils.openInputStream(fileTemp);
+            List<Integer> failList = new ArrayList<>();
+            failList.add(2);
+            InputStream respFile = excelService.excelDeleteRow(fileInputStream, failList);
+
+            FileInfoDTO fileInfoDTO = new FileInfoDTO();
+            fileInfoDTO.setFileName(originalFilename);
+            fileInfoDTO.setInputStream(respFile);
+            fileInfoDTO.setContentType(fileDTO.getContentType());
+
+            String blobNameFail = new StringBuilder(Constant.AZURE_DIR.ORIGINAL).append("/")
+                    .append(Constant.AZURE_DIR.FAIL).toString();
+            fileInfoDTO.setBlobDirectory(blobNameFail);
+
+            //upload file to FAIL directory
+            pushFileToAzureStore(fileInfoDTO);
+
+            FileUtils.delete(fileTemp);
+        } catch (Exception e) {
+            log.error("createFileExcelFail has been error: " + e);
         }
     }
 
