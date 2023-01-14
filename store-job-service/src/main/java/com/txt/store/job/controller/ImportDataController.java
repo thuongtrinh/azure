@@ -3,13 +3,15 @@ package com.txt.store.job.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.txt.store.job.constant.Constant;
 import com.txt.store.job.dto.FileDTO;
-import com.txt.store.job.dto.FileInfoDTO;
 import com.txt.store.job.dto.FileAzureRequestDTO;
+import com.txt.store.job.dto.FileInfoDTO;
 import com.txt.store.job.dto.common.RequestWithBody;
 import com.txt.store.job.dto.common.ResponseCode;
 import com.txt.store.job.dto.common.ResponseWithBody;
 import com.txt.store.job.dto.common.ResultDTO;
 import com.txt.store.job.dto.imports.DataImportDTO;
+import com.txt.store.job.service.AzureBlobServiceClient;
+import com.txt.store.job.service.AzureService;
 import com.txt.store.job.service.CommonService;
 import com.txt.store.job.service.ImportFileService;
 import com.txt.store.job.utils.ErrorUtil;
@@ -30,8 +32,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 @RestController
@@ -46,6 +51,8 @@ public class ImportDataController {
     final HttpServletRequest httpServletRequest;
     final ImportFileService importFileService;
     final CommonService commonService;
+    final AzureBlobServiceClient azureBlobServiceClient;
+    final AzureService azureService;
     //endregion
 
 
@@ -65,6 +72,26 @@ public class ImportDataController {
             String exchangeId = UUID.randomUUID().toString();
             MDC.put("traceId", exchangeId);
             response.setExchangeId(exchangeId);
+
+            Set<Thread> threads = Thread.getAllStackTraces().keySet();
+            Thread[] tArray = threads.toArray(new Thread[threads.size()]);
+
+            Arrays.stream(tArray).forEach(t -> {
+                if(t.getName().startsWith("my-scheduled-task-pool")) {
+                    System.out.println("Thread:   => " + t.getState());
+                    System.out.println(t.getId());
+                    System.out.println(t.getStackTrace());
+                    System.out.println(t.getClass());
+                    System.out.println(t.getContextClassLoader());
+                }
+            });
+
+            long count = Arrays.stream(tArray).filter(t ->
+                    t.getName().startsWith("my-scheduled-task-pool") && t.getState().name().equals(Thread.State.RUNNABLE.name())).count();
+            if(count > 0) {
+                response.setResponseStatus(ErrorUtil.createResponseStatus(ResponseCode.KEY_E011));
+                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
 
             ResultDTO<List<DataImportDTO>> resultlDTOs = importFileService.readFileImport(attachmentFile);
 
@@ -118,6 +145,13 @@ public class ImportDataController {
                 response.setResponseStatus(resultlDTOs.getStatus());
                 return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
             }
+
+            //Test call storage by token
+//            azureBlobServiceClient.blobContainerClient("pulseops", "ORIGINAL/USER_A0_20221211_2.xlsx");
+
+            //Test ways to gen token
+            azureService.genSasToken();
+            azureService.genSasSignatureToken( "ORIGINAL/USER_A0_20221211_2.xlsx");
 
             response.setResponseStatus(ErrorUtil.createResponseStatusFromErrorList(null));
             response.setBody(resultlDTOs.getBody());

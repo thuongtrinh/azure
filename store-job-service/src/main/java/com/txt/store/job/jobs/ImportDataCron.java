@@ -10,8 +10,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ImportDataCron {
 
-    @Scheduled(cron = "0 31 * * * *")
+    @Scheduled(cron = "0 0/2 * * * *")
     public void taskReadingData() {
-        log.info("Schedule task read submit data");
+        int i = 0;
+        System.out.println("Start job-----------------");
+        while (i < 2000000) {
+            log.info("Schedule task read submit data i=" + i++);
+        }
+        log.info("-------Finish ImportDataCron-------");
     }
 }

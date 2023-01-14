@@ -1,7 +1,5 @@
 package com.txt.store.job.config;
 
-import com.azure.core.http.ProxyOptions;
-import com.azure.core.http.netty.NettyAsyncHttpClientBuilder;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.BlobServiceClientBuilder;
@@ -13,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 
@@ -22,6 +19,7 @@ public class AzureConfig {
 
     @Value("${azure-storage.connectionString}")
     private String azureStorageConnectionString;
+
     @Value("${azure-storage.container}")
     private String azureStorageContainer;
 

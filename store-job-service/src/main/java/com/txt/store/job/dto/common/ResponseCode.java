@@ -16,6 +16,7 @@ public enum ResponseCode {
     KEY_E006("E006", "Error format name of excel file"),
     KEY_E007("E007", "Data not found"),
     KEY_E008("E008", "Upload file to azure store failed"),
+    KEY_E011("E011", "Cron is running"),
     KEY_E009("E009", "Error get file info in azure store"),
     KEY_E010("E010", "Error get data from azure store");
 

@@ -17,4 +17,8 @@ public interface AzureService {
     boolean moveFileBetweenAzureBlob(String blobNameSource, String blobNameTarget);
 
     void downloadedFile(FileAzureRequestDTO fileAzureRequestDTO);
+
+    void genSasToken();
+
+    void genSasSignatureToken(String blobName);
 }

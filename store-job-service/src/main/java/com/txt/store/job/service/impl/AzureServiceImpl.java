@@ -2,10 +2,12 @@ package com.txt.store.job.service.impl;
 
 import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
+import com.azure.storage.blob.BlobServiceClient;
+import com.azure.storage.blob.BlobServiceClientBuilder;
 import com.azure.storage.blob.models.BlobHttpHeaders;
+import com.azure.storage.blob.sas.BlobSasPermission;
+import com.azure.storage.blob.sas.BlobServiceSasSignatureValues;
 import com.azure.storage.blob.specialized.BlockBlobClient;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.microsoft.azure.storage.CloudStorageAccount;
 import com.microsoft.azure.storage.blob.*;
 import com.txt.store.job.dto.FileAzureRequestDTO;
 import com.txt.store.job.dto.FileDTO;
@@ -19,10 +21,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +38,7 @@ public class AzureServiceImpl implements AzureService {
     private String azureStorageContainer;
 
     final BlobContainerClient blobContainerClient;
-    final CloudBlobContainer cloudBlobContainerPC;
+    final CloudBlobContainer cloudBlobContainer;
 
     @Autowired
     private JsonUtils jsonUtils;
@@ -89,15 +91,15 @@ public class AzureServiceImpl implements AzureService {
     public List<FileDTO> getListAzureBlobFileName(String directoryPath) throws Exception {
         log.info("Process getListAzureBlobFileName - {}", directoryPath);
         List<FileDTO> fileDTOs = new ArrayList<>();
-        if (directoryPath == null) {
-            return fileDTOs;
+        if (StringUtils.isBlank(directoryPath)) {
+            directoryPath = "";
         }
 
         /*CloudStorageAccount cloudStorageAccount = CloudStorageAccount.parse(azureStorageConnectionString);
         CloudBlobClient cloudBlobClient = cloudStorageAccount.createCloudBlobClient();
         CloudBlobContainer cloudBlobContainer = cloudBlobClient.getContainerReference(azureStorageContainer);*/
 
-        CloudBlobDirectory directory = cloudBlobContainerPC.getDirectoryReference(directoryPath);
+        CloudBlobDirectory directory = cloudBlobContainer.getDirectoryReference(directoryPath);
         Iterable<ListBlobItem> blobItems = directory.listBlobs();
 
         for (ListBlobItem fileBlob : blobItems) {
@@ -114,6 +116,9 @@ public class AzureServiceImpl implements AzureService {
                 fileDTOs.add(fileDTO);
             }
         }
+
+//        System.out.println("------TEST genSasToken------");
+//        genSasToken();
 
         log.info("Success getListAzureBlobFileName of path directoty {} - {}", directoryPath, jsonUtils.objectToJson(fileDTOs));
         return fileDTOs;
@@ -165,4 +170,49 @@ public class AzureServiceImpl implements AzureService {
         }
         return os.toByteArray();
     }
+
+
+    public void genSasToken() {
+        try {
+            // Create a blob service client
+//            CloudStorageAccount account = CloudStorageAccount.parse(azureStorageConnectionString);
+//            CloudBlobClient blobClient = account.createCloudBlobClient();
+//            CloudBlobContainer container = blobClient.getContainerReference(azureStorageContainer);
+
+            Date expirationTime = Date.from(LocalDateTime.now().plusDays(2).atZone(ZoneOffset.UTC).toInstant());
+            SharedAccessBlobPolicy sharedAccessPolicy = new SharedAccessBlobPolicy();
+            sharedAccessPolicy.setPermissions(EnumSet.of(SharedAccessBlobPermissions.READ,
+                    SharedAccessBlobPermissions.WRITE, SharedAccessBlobPermissions.ADD));
+            sharedAccessPolicy.setSharedAccessStartTime(new Date());
+            sharedAccessPolicy.setSharedAccessExpiryTime(expirationTime);
+
+            String sasToken = cloudBlobContainer.generateSharedAccessSignature(sharedAccessPolicy, null);
+            System.out.println(sasToken);
+            System.out.println(cloudBlobContainer.getUri());
+
+            //sig=HJVpU2DBSE%2B6rcRcHwFHw3zWR9YaDupRPEjv40IOUXs%3D&st=2022-12-17T15%3A11%3A32Z&se=2022-12-19T22%3A11%3A32Z&sv=2019-02-02&sp=raw&sr=c
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void genSasSignatureToken(String blobName) {
+        try {
+            BlobServiceClient client = new BlobServiceClientBuilder().connectionString(azureStorageConnectionString).buildClient();
+            BlobClient blobClient = client.getBlobContainerClient(azureStorageContainer).getBlobClient(blobName);
+
+            BlobSasPermission blobSasPermission = new BlobSasPermission().setReadPermission(true); // grant read permission onmy
+            OffsetDateTime expiryTime = OffsetDateTime.now().plusDays(2); // 2 days to expire
+
+            BlobServiceSasSignatureValues values = new BlobServiceSasSignatureValues(expiryTime, blobSasPermission)
+                    .setStartTime(OffsetDateTime.now());
+
+            System.out.println(blobClient.generateSas(values));
+
+            //sv=2021-10-04&st=2022-12-17T15%3A11%3A32Z&se=2022-12-19T15%3A11%3A32Z&sr=b&sp=r&sig=P39dVsp5aBc9h6PRcfjPmumGv3M4XRaFU%2BNE%2BDxR91o%3D
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

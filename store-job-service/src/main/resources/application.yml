@@ -25,6 +25,8 @@ management:
       exposure:
         include: metrics,prometheus
   endpoint:
+    info:
+      enabled: true
     health:
       show-details: always
 

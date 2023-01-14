@@ -32,10 +32,10 @@ import java.util.UUID;
 
 
 @RestController
-@Tag(name = "Data MongoDB Submit Controller", description = "Data submit Controller API")
+@Tag(name = "Data MongoDB Controller", description = "Data MongoDB Controller API")
 @Slf4j
 @RequiredArgsConstructor
-public class DataSubmitController {
+public class DataManagerController {
 
     final Environment env;
     final ObjectMapper objectMapper;

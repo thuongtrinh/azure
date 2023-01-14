@@ -20,6 +20,7 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.web.client.RestTemplate;
 
 import javax.net.ssl.SSLContext;
@@ -36,6 +37,7 @@ public class BeanConfig {
     Environment env;
     RestTemplate restTemplate;
     ObjectMapper objectMapper;
+    TaskScheduler taskScheduler;
 
     @Autowired
     public BeanConfig(Environment env, RestTemplateBuilder builder, ObjectMapper objectMapper) {
@@ -77,6 +79,7 @@ public class BeanConfig {
         List<HttpMessageConverter<?>> list = new ArrayList<>();
         list.add(c);
         restTemplate.setMessageConverters(list);
+
         return restTemplate;
     }
 }

@@ -13,6 +13,9 @@ public class BlobDTO implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String blobName;
+    private String blobUrl;
     private String container ;
-    private String blobType;
+    private String blobProperties;
+    private String accountUrl;
+    private String accountName;
 }
