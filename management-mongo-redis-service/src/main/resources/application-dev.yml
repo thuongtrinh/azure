@@ -1,0 +1,21 @@
+server:
+  port: 8086
+  servlet:
+    context-path: /
+  shutdown: "graceful"
+
+spring:
+  cache:
+    type: redis
+  redis:
+    url: redis://${REDIS_KEY}@${REDIS_HOST}:${REDIS_PORT}
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-root.xml
+    url: ${MONGODB_URI}
+
+version: ${RELEASE_VERSION}
+
+caching.spring.defaultTtlTime: 60 # minutes

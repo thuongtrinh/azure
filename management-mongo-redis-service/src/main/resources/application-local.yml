@@ -1,0 +1,28 @@
+server:
+  port: 8086
+  servlet:
+    context-path: /
+  shutdown: "graceful"
+
+spring:
+  cache:
+    type: redis
+  redis:
+    url: redis://localhost:6379
+  data:
+    mongodb:
+      uri: mongodb://root:123456@localhost:27017/liquibasemongoredis?authSource=admin&retryWrites=true&w=majority&directConnection=true&authMechanism=SCRAM-SHA-1
+#      authentication-database: admin
+#      username: root
+#      password: 123456
+#      database: liquibasemongoredis
+#      port: '27017'
+#      host: localhost
+  liquibase:
+    enabled: false
+    change-log: classpath:db/changelog/db.changelog-root.xml
+    uri: mongodb://root:123456@localhost:27017/liquibasemongoredis?authSource=admin&retryWrites=true&w=majority&directConnection=true&authMechanism=SCRAM-SHA-1
+
+version: 1.0.0
+
+caching.spring.defaultTtlTime: 60 # minutes

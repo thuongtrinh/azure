@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+		http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <changeSet id="txt-01" author="ThuongTX">
+        <ext:createCollection collectionName="user_info"/>
+    </changeSet>
+
+    <changeSet id="txt-02" author="ThuongTX">
+        <ext:insertMany collectionName="user_info">
+            <ext:documents>
+                [
+                {
+                "email": "daniel@getarrays.com",
+                "profile": "https://bootdey.com/img/Content/avatar/avatar1.png",
+                "firstName": "Daniel",
+                "lastName": "Craig",
+                "phone": "4570090332",
+                "enabled": true,
+                "password": "test",
+                "userName": "txt001"
+                },
+                {
+                "email": "dave@getarrays.com",
+                "profile": "https://bootdey.com/img/Content/avatar/avatar2.png",
+                "firstName": "Andy",
+                "lastName": "Maxwell",
+                "phone": "4570090332",
+                "enabled": true,
+                "password": "test",
+                "userName": "txt002"
+                },
+                {
+                "email": "christine@getarraYs.com",
+                "profile": "https://bootdey.com/img/Content/avatar/avatar3.png",
+                "firstName": "Christine",
+                "lastName": "Smith",
+                "phone": "4570090332",
+                "enabled": true,
+                "password": "test",
+                "userName": "txt003"
+                },
+                {
+                "email": "dave@getarrays.com",
+                "profile": "https://bootdey.com/img/Content/avatar/avatar7.png",
+                "firstName": "Dave",
+                "lastName": "Rogers",
+                "phone": "4570090332",
+                "enabled": true,
+                "password": "test",
+                "userName": "txt004"
+                },
+                {
+                "email": "dave@getarrays.com",
+                "profile": "https://bootdey.com/img/Content/avatar/avatar8.png",
+                "firstName": "Alice",
+                "lastName": "Maxwell",
+                "phone": "4570090332",
+                "enabled": false,
+                "password": "test",
+                "userName": "txt005"
+                }
+                ]
+            </ext:documents>
+        </ext:insertMany>
+    </changeSet>
+</databaseChangeLog>

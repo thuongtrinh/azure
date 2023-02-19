@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+		http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <changeSet id="txt-02" author="ThuongTX">
+        <ext:insertMany collectionName="user_info">
+            <ext:documents>
+                [
+                {
+                "id": "63d7fde7b72b1a1bf6cc6faa",
+                "email": "daniel@getarrays.com",
+                "profile": "https://bootdey.com/img/Content/avatar/avatar1.png",
+                "firstName": "Daniel",
+                "lastName": "Craig",
+                "phone": "4570090332",
+                "enabled": true,
+                "password": "test",
+                "userName": "txt111"
+                }
+                ]
+            </ext:documents>
+        </ext:insertMany>
+    </changeSet>
+</databaseChangeLog>
