@@ -4,8 +4,8 @@ USER root
 
 ENV ROOT_DIR /app
 
-ENV FUll_APP_NAME store-job-service*.jar
-ENV APP_NAME store-job-service
+ENV FUll_APP_NAME azure-store-job-service*.jar
+ENV APP_NAME azure-store-job-service
 ENV APP_HOME ${ROOT_DIR}/${APP_NAME}
 
 

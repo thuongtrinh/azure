@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>com.txt.store.job</groupId>
-    <artifactId>store-job-service</artifactId>
+    <artifactId>azure-store-job-service</artifactId>
     <version>1.0</version>
     <name>Store Job Service</name>
     <description>Store Job Service</description>

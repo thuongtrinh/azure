@@ -1,0 +1,34 @@
+server:
+  port: 8085
+  servlet:
+    context-path: /
+  shutdown: "graceful"
+
+spring:
+  data:
+    mongodb:
+#      authentication-database: admin
+#      username: admin
+#      password: password
+      database: springboot-mongo
+      port: '27017'
+      host: localhost
+#      uri: mongodb+srv://mongo_user:mongo_pass@host-demo.mongodb.net/database_sys?retryWrites=true&w=majority
+#  liquibase:
+#    change-log: classpath:db.changelog/db.changelog-root.xml
+#    url: mongodb+srv://admin:password@localhost/springboot-mongo?authSource=admin
+
+azure-storage:
+  connectionString: "DefaultEndpointsProtocol=https;AccountName=${AZURESTORAGE_USERNAME};AccountKey=${AZURESTORAGE_PASSWORD};EndpointSuffix=core.windows.net"
+  container: ${AZURE_STORAGE_CONTAINER}
+  sasToken: ${AZURE_STORAGE_SASTOKEN}
+  account: ${AZURE_STORAGE_USERNAME}
+  accountKey: ${AZURE_STORAGE_PASSWORD}
+
+#  ${API_URL}/azurestorage/${VERSION_CONTEXT_PATH}/?container=${azure-storage.container}&blob={{blobName}}
+
+
+
+transaction:
+  url:
+

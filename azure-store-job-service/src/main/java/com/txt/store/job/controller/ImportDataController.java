@@ -147,11 +147,11 @@ public class ImportDataController {
             }
 
             //Test call storage by token
-//            azureBlobServiceClient.blobContainerClient("pulseops", "ORIGINAL/USER_A0_20221211_2.xlsx");
+//            azureBlobServiceClient.blobContainerClient("name_store", "ORIGINAL/xxx_20221211_2.xlsx");
 
             //Test ways to gen token
             azureService.genSasToken();
-            azureService.genSasSignatureToken( "ORIGINAL/USER_A0_20221211_2.xlsx");
+            azureService.genSasSignatureToken( "ORIGINAL/xxx_20221211_2.xlsx");
 
             response.setResponseStatus(ErrorUtil.createResponseStatusFromErrorList(null));
             response.setBody(resultlDTOs.getBody());
