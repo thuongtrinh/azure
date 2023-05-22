@@ -67,7 +67,7 @@ public class MongoLiquibaseRedisServiceApplication {
             protocol = "https";
         }
         log.info("""
-                        ----------------------------------------------------------\t
+                        \n----------------------------------------------------------\t
                             Application '{}' is running! Access URLs:\t
                             Protocol: \t\t{}\t
                             Profile(s): \t{}\n----------------------------------------------------------""",
