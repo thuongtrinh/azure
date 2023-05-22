@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>com.txt.mongoredis</groupId>
-    <artifactId>management-mongo-redis-service</artifactId>
+    <artifactId>management-mongo-liquibase-redis-service</artifactId>
     <version>1.0</version>
     <name>Management Mongo Redis Service</name>
     <description>Management Mongo Redis Service</description>
