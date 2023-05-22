@@ -19,14 +19,20 @@ spring:
 #    url: mongodb+srv://admin:password@localhost/springboot-mongo?authSource=admin
 
 azure-storage:
-  connectionString: "DefaultEndpointsProtocol=https;AccountName=${AZURESTORAGE_USERNAME};AccountKey=${AZURESTORAGE_PASSWORD};EndpointSuffix=core.windows.net"
-  container: ${AZURE_STORAGE_CONTAINER}
-  sasToken: ${AZURE_STORAGE_SASTOKEN}
-  account: ${AZURE_STORAGE_USERNAME}
-  accountKey: ${AZURE_STORAGE_PASSWORD}
+  connectionString: "DefaultEndpointsProtocol=https;AccountName=pushstore;AccountKey=2FQuxjl16w566WIaQlCqOkOu6LrPee+Bgv1hXUZOxwQkfMm+rxlTe7USlk2Bgvub9H17bGjl7h2Z+AStLS1m3Q==;EndpointSuffix=core.windows.net"
+  container: pulseops
+  sasToken: sig=caS11wQ%2FGuGdzjY%2BzEVFtPaRm5nTT8ZO8okQKql9vDw%3D&st=2022-12-17T08%3A24%3A02Z&se=2022-12-19T15%3A24%3A02Z&sv=2019-02-02&sp=raw&sr=c
+  account: pushstore
+  accountKey: 2FQuxjl16w566WIaQlCqOkOu6LrPee+Bgv1hXUZOxwQkfMm+rxlTe7USlk2Bgvub9H17bGjl7h2Z+AStLS1m3Q==
+  storage-account-url: https://pushstore.blob.core.windows.net/pulseops
 
 #  ${API_URL}/azurestorage/${VERSION_CONTEXT_PATH}/?container=${azure-storage.container}&blob={{blobName}}
 
+# https://pushstore.blob.core.windows.net/
+# https://pushstore-secondary.blob.core.windows.net/
+
+#/subscriptions/59cb6c37-f81e-4b27-822e-5c2cbd7fbf3f/resourceGroups/tech/providers/Microsoft.Storage/storageAccounts/pushstore
+#/subscriptions/59cb6c37-f81e-4b27-822e-5c2cbd7fbf3f/resourceGroups/tech/providers/Microsoft.Storage/storageAccounts/pushstore/blobServices/default
 
 
 transaction:

@@ -1,3 +1,3 @@
 library changelog: false, identifier: 'jenkins-pipeline-library'
 library changelog: false, identifier: 'xxx-jenkins-library@master'
-pipeline_build_framework.build_project("management-mongo-redis-service")
+pipeline_build_framework.build_project("management-mongo-liquibase-redis-service")

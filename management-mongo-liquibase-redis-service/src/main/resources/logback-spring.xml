@@ -24,7 +24,7 @@
             </http>
             <format class="com.github.loki4j.logback.ProtobufEncoder">
                 <label>
-                    <pattern>app=management-mongo-redis-service,host=${HOSTNAME},level=%level</pattern>
+                    <pattern>app=management-mongo-liquibase-redis-service,host=${HOSTNAME},level=%level</pattern>
                 </label>
                 <message>
                     <pattern>

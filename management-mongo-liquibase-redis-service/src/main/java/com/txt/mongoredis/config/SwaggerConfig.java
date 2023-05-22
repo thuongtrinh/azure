@@ -22,7 +22,7 @@ public class SwaggerConfig {
 
         OpenAPI openAPI = new OpenAPI()
                 .info(new Info()
-                        .title("Mongo Redis Service")
+                        .title("Mongo Liquibase Redis Service")
                         .version(appVersion)
                         .description(appDesciption.concat(" [").concat("]"))
                         .license(new License().name("txt")
@@ -34,7 +34,7 @@ public class SwaggerConfig {
     @Bean
     public GroupedOpenApi premiumCollectionJobApi() {
         return GroupedOpenApi.builder()
-                .group("MongoRedisService")
+                .group("MongoLiquibaseRedisService")
                 .packagesToScan("com.txt.mongoredis.controller")
                 .build();
     }

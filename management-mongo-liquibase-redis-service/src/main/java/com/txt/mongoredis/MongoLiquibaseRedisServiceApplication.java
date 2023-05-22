@@ -23,7 +23,7 @@ import java.util.Map;
 @EnableMongoRepositories
 @EnableMongoAuditing
 @EnableCaching
-public class MongoRedisServiceApplication {
+public class MongoLiquibaseRedisServiceApplication {
 
     private static final String SPRING_PROFILE_DEFAULT = "spring.profiles.default";
     public static final String SPRING_PROFILE_DEVELOPMENT = "dev";
@@ -31,11 +31,11 @@ public class MongoRedisServiceApplication {
     public static final String SPRING_PROFILE_PRODUCTION = "prod";
     public static final String SPRING_PROFILE_CLOUD = "cloud";
 
-    private static final Logger log = LoggerFactory.getLogger(MongoRedisServiceApplication.class);
+    private static final Logger log = LoggerFactory.getLogger(MongoLiquibaseRedisServiceApplication.class);
 
     private final Environment env;
 
-    public MongoRedisServiceApplication(Environment env) {
+    public MongoLiquibaseRedisServiceApplication(Environment env) {
         this.env = env;
     }
 
@@ -55,7 +55,7 @@ public class MongoRedisServiceApplication {
 
     // must have a main method spring-boot can run
     public static void main(String[] args) {
-        SpringApplication app = new SpringApplication(MongoRedisServiceApplication.class);
+        SpringApplication app = new SpringApplication(MongoLiquibaseRedisServiceApplication.class);
 
         addDefaultProfile(app);
 

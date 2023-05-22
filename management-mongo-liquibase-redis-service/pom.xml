@@ -150,7 +150,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.txt.mongoredis.MongoRedisServiceApplication</mainClass>
+                            <mainClass>com.txt.mongoredis.MongoLiquibaseRedisServiceApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -160,7 +160,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.7.1</version>
                 <configuration>
-                    <mainClass>com.txt.mongoredis.MongoRedisServiceApplication</mainClass>
+                    <mainClass>com.txt.mongoredis.MongoLiquibaseRedisServiceApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

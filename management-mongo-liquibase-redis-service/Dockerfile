@@ -4,8 +4,8 @@ USER root
 
 ENV ROOT_DIR /app
 
-ENV FUll_APP_NAME management-mongo-redis-service*.jar
-ENV APP_NAME management-mongo-redis-service
+ENV FUll_APP_NAME management-mongo-liquibase-redis-service*.jar
+ENV APP_NAME management-mongo-liquibase-redis-service
 ENV APP_HOME ${ROOT_DIR}/${APP_NAME}
 
 COPY ./target/${FUll_APP_NAME} ${APP_HOME}

@@ -2,7 +2,7 @@ package com.txt.mongoredis.constant;
 
 public enum FieldName {
     CREATE_DATE("createDate"),
-    BANK_CODE("bankCode"),
+    POST_CODE("postCode"),
     STATUS("status");
 
     FieldName(String name) {

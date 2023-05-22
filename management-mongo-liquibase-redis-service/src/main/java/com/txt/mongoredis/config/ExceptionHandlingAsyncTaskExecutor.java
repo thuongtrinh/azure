@@ -9,8 +9,7 @@ import org.springframework.core.task.AsyncTaskExecutor;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-public class ExceptionHandlingAsyncTaskExecutor implements AsyncTaskExecutor,
-        InitializingBean, DisposableBean {
+public class ExceptionHandlingAsyncTaskExecutor implements AsyncTaskExecutor, InitializingBean, DisposableBean {
 
     private final Logger log = LoggerFactory.getLogger(ExceptionHandlingAsyncTaskExecutor.class);
 
